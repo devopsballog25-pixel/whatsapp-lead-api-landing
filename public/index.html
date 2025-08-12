@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp Lead Extractor API</title>
+  <meta name="description" content="Turn WhatsApp messages into qualified leads — instantly. Clean JSON: email, phone, name, company." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config (extend as needed)
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['ui-sans-serif','system-ui','-apple-system','Segoe UI','Roboto','Inter','Helvetica Neue','Arial','Noto Sans','sans-serif'] },
+          boxShadow: { glow: '0 10px 40px -10px rgba(16,185,129,.5)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Animated gradient background */
+    .gradient-hero {
+      background: linear-gradient(120deg,#0ea5e9, #10b981, #6366f1);
+      background-size: 200% 200%;
+      animation: gradientShift 10s ease infinite;
+      filter: blur(60px);
+      opacity: .35;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%;}
+      50% { background-position: 100% 50%;}
+      100% { background-position: 0% 50%;}
+    }
+    /* Pulse CTA */
+    .cta-pulse { animation: ctaPulse 2s infinite; }
+    @keyframes ctaPulse {
+      0% { transform: translateZ(0) scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,.7);}
+      70%{ transform: translateZ(0) scale(1.02); box-shadow: 0 0 0 15px rgba(16,185,129,0);}
+      100% { transform: translateZ(0) scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0);}
+    }
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    /* Code highlighting (very lightweight) */
+    pre code { white-space: pre-wrap; word-break: break-word; }
+    .tok-key { color: #93c5fd; }
+    .tok-str { color: #86efac; }
+    .tok-num { color: #fca5a5; }
+    .tok-bool { color: #fcd34d; }
+    .tok-null { color: #e5e7eb; }
+    /* Hide scrollbar in carousels */
+    .no-scrollbar::-webkit-scrollbar { display:none; }
+    .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+  </style>
+  <script>
+    // Dark mode toggle (persist)
+    (function(){
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <!-- NAV -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-white/70 dark:bg-gray-900/60 border-b border-gray-200/60 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#" class="font-semibold text-lg tracking-tight">WhatsLead API</a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#demo" class="hover:opacity-70">Live Demo</a>
+        <a href="#pricing" class="hover:opacity-70">Pricing</a>
+        <a href="#features" class="hover:opacity-70">Features</a>
+        <a href="#testimonials" class="hover:opacity-70">Love</a>
+        <a href="#faq" class="hover:opacity-70">FAQ</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Toggle theme">🌓</button>
+        <a target="_blank" href="https://rapidapi.com/devopsviji02/api/whatsapp-lead-extractor-api"
+           class="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-glow cta-pulse">Get API Key</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 gradient-hero"></div>
+    <div class="relative max-w-7xl mx-auto px-4 py-20 md:py-28">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h1 class="text-4xl md:text-6xl font-black leading-tight">
+            Turn WhatsApp messages into <span class="text-emerald-400">qualified leads</span> — instantly.
+          </h1>
+          <p class="mt-5 text-lg text-gray-700 dark:text-gray-300">
+            Extract <b>email</b>, <b>phone</b>, <b>name</b>, and <b>company</b> from any message. JSON in, JSON out. Sub-300ms in Lite mode.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#demo" class="px-5 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-glow cta-pulse">Try Live Demo</a>
+            <a target="_blank" href="https://rapidapi.com/devopsviji02/api/whatsapp-lead-extractor-api"
+               class="px-5 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800">View on RapidAPI</a>
+          </div>
+          <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">No signup wall. Subscribe on RapidAPI, paste your key, and go.</div>
+        </div>
+        <div class="reveal">
+          <div class="bg-white/80 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-6">
+            <pre class="text-xs bg-gray-900 text-gray-200 rounded-xl p-4 overflow-auto"><code id="heroSample"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="border-t border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="reveal text-center">
+        <div class="text-4xl font-extrabold" data-counter="42000">0</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Messages parsed</div>
+      </div>
+      <div class="reveal text-center">
+        <div class="text-4xl font-extrabold" data-counter="99.9">0</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Uptime SLA</div>
+      </div>
+      <div class="reveal text-center">
+        <div class="text-4xl font-extrabold" data-counter="280ms">0</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Median (Lite)</div>
+      </div>
+      <div class="reveal text-center">
+        <div class="text-4xl font-extrabold" data-counter="120+">0</div>
+        <div class="text-sm text-gray-600 dark:text-gray-400">Teams onboarded</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO -->
+  <section id="demo" class="border-t border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 py-16">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Live Demo</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Paste a WhatsApp message and click Extract.</p>
+      </div>
+
+      <div class="mt-8 grid lg:grid-cols-2 gap-8">
+        <div class="reveal space-y-4">
+          <label class="block text-sm font-medium">Your RapidAPI Key</label>
+          <div class="flex gap-2">
+            <input id="apiKey" type="password" placeholder="Paste your RapidAPI key" class="w-full border border-gray-300 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-900">
+            <button id="copyKey" class="px-3 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800" title="Copy key">⧉</button>
+          </div>
+
+          <label class="block text-sm font-medium">Message</label>
+          <textarea id="msg" rows="6" class="w-full border border-gray-300 dark:border-gray-700 rounded-xl p-3 bg-white dark:bg-gray-900"
+            placeholder="Hi, this is Jane from Globex. You can reach me at +1 415 555 1234 or jane@globex.com"></textarea>
+
+          <div class="flex items-center gap-3">
+            <button id="doExtract" class="px-5 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-glow cta-pulse">Extract</button>
+            <button id="copyCurl" class="px-5 py-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800">Copy cURL</button>
+          </div>
+          <p id="hint" class="text-xs text-gray-500"></p>
+        </div>
+
+        <div class="reveal">
+          <label class="block text-sm font-medium">Response</label>
+          <pre class="mt-2 bg-gray-900 text-gray-100 text-sm rounded-xl p-4 overflow-auto h-72"><code id="out">—</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="border-t border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-16">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Simple Pricing</h2>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">Start free. Upgrade when you scale.</p>
+      </div>
+      <div class="mt-10 grid md:grid-cols-3 gap-6">
+        <div class="reveal bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:-translate-y-1 transition">
+          <h3 class="font-semibold text-lg">Free</h3>
+          <p class="text-4xl font-extrabold mt-2">$0</p>
+          <ul class="mt-4 text-sm space-y-2 text-gray-700 dark:text-gray-300">
+            <li>• 100 calls/mo + 10 grace</li>
+            <li>• Lite extraction</li>
+            <li>• Upgrade nudges in response</li>
+          </ul>
+          <a target="_blank" href="https://rapidapi.com/devopsviji02/api/whatsapp-lead-extractor-api"
+             class="mt-6 inline-block w-full text-center px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800">Start Free</a>
+        </div>
+        <div class="reveal relative bg-white dark:bg-gray-900 border-2 border-emerald-600 rounded-2xl p-6 shadow-glow hover:-translate-y-1 transition">
+          <div class="absolute -top-3 right-4 text-xs bg-emerald-600 text-white px-2 py-1 rounded">Most Popular</div>
+          <h3 class="font-semibold text-lg">Pro</h3>
+          <p class="text-4xl font-extrabold mt-2">$29</p>
+          <ul class="mt-4 text-sm space-y-2 text-gray-700 dark:text-gray-300">
+            <li>• 10k calls/mo</li>
+            <li>• Confidence scores</li>
+            <li>• Webhooks & bulk</li>
+          </ul>
+          <a target="_blank" href="https://rapidapi.com/devopsviji02/api/whatsapp-lead-extractor-api"
+             class="mt-6 inline-block w-full text-center px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">Upgrade</a>
+        </div>
+        <div class="reveal bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:-translate-y-1 transition">
+          <h3 class="font-semibold text-lg">Scale</h3>
+          <p class="text-4xl font-extrabold mt-2">Custom</p>
+          <ul class="mt-4 text-sm space-y-2 text-gray-700 dark:text-gray-300">
+            <li>• Unlimited volume</li>
+            <li>• SLA & dedicated support</li>
+            <li>• Private models</li>
+          </ul>
+          <a href="mailto:sales@yourdomain.com"
+             class="mt-6 inline-block w-full text-center px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800">Talk to us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES COMPARISON -->
+  <section id="features" class="border-t border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 py-16">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">What you get</h2>
+      </div>
+      <div class="mt-8 overflow-x-auto no-scrollbar">
+        <table class="min-w-[720px] w-full text-left border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+          <thead class="bg-gray-100 dark:bg-gray-800">
+            <tr>
+              <th class="p-4">Feature</th>
+              <th class="p-4">Free</th>
+              <th class="p-4">Pro</th>
+              <th class="p-4">Scale</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+            <tr class="reveal"><td class="p-4">Lite extraction (sub-300ms)</td><td class="p-4">✔️</td><td class="p-4">✔️</td><td class="p-4">✔️</td></tr>
+            <tr class="reveal"><td class="p-4">Confidence scores</td><td class="p-4">—</td><td class="p-4">✔️</td><td class="p-4">✔️</td></tr>
+            <tr class="reveal"><td class="p-4">Webhooks</td><td class="p-4">—</td><td class="p-4">✔️</td><td class="p-4">✔️ (priority)</td></tr>
+            <tr class="reveal"><td class="p-4">Bulk processing</td><td class="p-4">—</td><td class="p-4">✔️</td><td class="p-4">✔️</td></tr>
+            <tr class="reveal"><td class="p-4">SLA</td><td class="p-4">—</td><td class="p-4">—</td><td class="p-4">✔️</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS CAROUSEL -->
+  <section id="testimonials" class="border-t border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-16">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Loved by SDRs & founders</h2>
+      </div>
+      <div class="mt-8 relative">
+        <div id="carousel" class="flex gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+          <blockquote class="snap-center min-w-[320px] md:min-w-[520px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 reveal">
+            “We plugged this into Zapier → HubSpot and it just works. 2 hours to set up, now 30% more meetings.”
+            <div class="mt-3 text-sm text-gray-600 dark:text-gray-400">— Priya K., Growth @ SaaSCo</div>
+          </blockquote>
+          <blockquote class="snap-center min-w-[320px] md:min-w-[520px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 reveal">
+            “The API extracts cleaner phone numbers than our in-house regex. Pro plan’s webhooks are gold.”
+            <div class="mt-3 text-sm text-gray-600 dark:text-gray-400">— Marco R., Founder @ LeadFox</div>
+          </blockquote>
+          <blockquote class="snap-center min-w-[320px] md:min-w-[520px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 reveal">
+            “Free → Pro in a week after seeing the grace-call nudges convert our team. Smart product.”
+            <div class="mt-3 text-sm text-gray-600 dark:text-gray-400">— Hannah T., SDR Lead</div>
+          </blockquote>
+        </div>
+        <div class="mt-4 flex justify-center gap-2">
+          <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></button>
+          <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></button>
+          <button class="carousel-dot w-2.5 h-2.5 rounded-full bg-gray-300 dark:bg-gray-700"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="border-t border-gray-200 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 py-16">
+      <div class="reveal">
+        <h2 class="text-3xl md:text-4xl font-extrabold">FAQ</h2>
+      </div>
+      <div class="mt-6 space-y-4">
+        <details class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 reveal">
+          <summary class="font-medium cursor-pointer">How fast is it?</summary>
+          <p class="mt-2 text-gray-700 dark:text-gray-300">Lite mode returns in ~200–300ms. Pro uses LLMs and can take ~1–2s asynchronously.</p>
+        </details>
+        <details class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 reveal">
+          <summary class="font-medium cursor-pointer">What fields do you extract?</summary>
+          <p class="mt-2 text-gray-700 dark:text-gray-300">Email, phone, name, company, and (Pro) confidence scores. Bulk + webhooks on Pro.</p>
+        </details>
+        <details class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 reveal">
+          <summary class="font-medium cursor-pointer">Do you keep my data?</summary>
+          <p class="mt-2 text-gray-700 dark:text-gray-300">Only minimal metadata for abuse prevention and usage analytics; no resale or model training.</p>
+        </details>
+      </div>
+      <div class="mt-8">
+        <a target="_blank" href="https://rapidapi.com/devopsviji02/api/whatsapp-lead-extractor-api"
+           class="px-6 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 shadow-glow cta-pulse">Get Started →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid sm:grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+      <div>
+        <div class="font-semibold">WhatsLead API</div>
+        <div class="text-gray-600 dark:text-gray-400 mt-2">JSON in, JSON out for WhatsApp lead extraction.</div>
+      </div>
+      <div>
+        <div class="font-semibold">Product</div>
+        <ul class="mt-2 space-y-1">
+          <li><a href="#demo" class="hover:opacity-70">Live Demo</a></li>
+          <li><a href="#pricing" class="hover:opacity-70">Pricing</a></li>
+          <li><a href="#features" class="hover:opacity-70">Features</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-semibold">Company</div>
+        <ul class="mt-2 space-y-1">
+          <li><a href="mailto:support@yourdomain.com" class="hover:opacity-70">Support</a></li>
+          <li><a href="mailto:sales@yourdomain.com" class="hover:opacity-70">Sales</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-semibold">Legal</div>
+        <ul class="mt-2 space-y-1">
+          <li><a href="#" class="hover:opacity-70">Terms</a></li>
+          <li><a href="#" class="hover:opacity-70">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center text-gray-500 dark:text-gray-400 pb-8">© <span id="y"></span> WhatsLead API</div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Theme toggle
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const html = document.documentElement;
+      const isDark = html.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    }, {threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+    // Animated counters
+    function animateNumber(el) {
+      const raw = (el.getAttribute('data-counter')||'0').toString();
+      const isMs = raw.endsWith('ms');
+      const isPlus = raw.endsWith('+');
+      const isPct = raw.endsWith('%');
+      const isDec = raw.includes('.');
+      const num = parseFloat(raw);
+      const suffix = isMs ? 'ms' : isPlus ? '+' : isPct ? '%' : (raw.replace(/[0-9.]/g,''));
+      let start = 0, duration = 1200, startTime = null;
+      function frame(ts){
+        if(!startTime) startTime = ts;
+        const p = Math.min(1,(ts-startTime)/duration);
+        const val = start + (num - start) * p;
+        el.textContent = (isDec ? val.toFixed(1) : Math.round(val)) + suffix;
+        if(p<1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+    document.querySelectorAll('[data-counter]').forEach(animateNumber);
+
+    // Simple JSON syntax highlighter
+    function highlightJSON(obj){
+      let json = typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2);
+      json = json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return json
+        .replace(/("(\\u[\da-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?)/g, (m)=> {
+          const cls = m.endsWith(':') ? 'tok-key' : 'tok-str';
+          return `<span class="${cls}">${m}</span>`;
+        })
+        .replace(/\b(true|false)\b/g,'<span class="tok-bool">$1</span>')
+        .replace(/\b(null)\b/g,'<span class="tok-null">$1</span>')
+        .replace(/(-?\d+(?:\.\d+)?)/g,'<span class="tok-num">$1</span>');
+    }
+
+    // Hero sample
+    const heroSample = {
+      request: {
+        message: "Jane from Globex, +1 415 555 1234, jane@globex.com",
+        mode: "lite"
+      },
+      response: {
+        data: { email: "jane@globex.com", phone: "+14155551234" },
+        _meta: { plan: "free", calls_remaining: 43 }
+      }
+    };
+    document.getElementById('heroSample').innerHTML = highlightJSON(heroSample);
+
+    // Copy helpers
+    function copyText(t){ navigator.clipboard.writeText(t); }
+
+    document.getElementById('copyKey').addEventListener('click', ()=>{
+      const v = document.getElementById('apiKey').value.trim();
+      if(!v) return;
+      copyText(v);
+      toast('API key copied');
+    });
+
+    // Toast
+    function toast(text){
+      const t = document.createElement('div');
+      t.textContent = text;
+      t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-white text-sm px-3 py-1.5 rounded-lg opacity-90';
+      document.body.appendChild(t);
+      setTimeout(()=>{ t.remove(); }, 1600);
+    }
+
+    // Live demo
+    const out = document.getElementById('out');
+    const hint = document.getElementById('hint');
+
+    document.getElementById('doExtract').addEventListener('click', async ()=>{
+      const apiKey = document.getElementById('apiKey').value.trim();
+      const msg = document.getElementById('msg').value.trim();
+      if(!apiKey){ hint.textContent = 'Paste your RapidAPI key first.'; return; }
+      if(!msg){ hint.textContent = 'Add a WhatsApp message.'; return; }
+      hint.textContent = '';
+      out.innerHTML = highlightJSON('Calling API...');
+
+      const body = JSON.stringify({ message: msg, mode: 'lite' });
+      try {
+        const res = await fetch('https://whatslead-api-production.up.railway.app/leads/', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + apiKey,
+            'Content-Type': 'application/json'
+          },
+          body
+        });
+        const json = await res.json();
+        out.innerHTML = highlightJSON(json);
+      } catch (e) {
+        out.innerHTML = highlightJSON({ error: e.message || 'Request failed' });
+      }
+    });
+
+    // Copy cURL
+    document.getElementById('copyCurl').addEventListener('click', ()=>{
+      const apiKey = document.getElementById('apiKey').value.trim() || '<YOUR_KEY>';
+      const msg = (document.getElementById('msg').value.trim() || 'Hello from Globex +1 415 555 1234 jane@globex.com').replace(/"/g,'\\"');
+      const curl = `curl -sS https://whatslead-api-production.up.railway.app/leads/ \\
+  -H "Authorization: Bearer ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d "{\\"message\\": \\"${msg}\\", \\"mode\\": \\"lite\\"}"`;
+      copyText(curl);
+      toast('cURL copied');
+    });
+
+    // Testimonials carousel (auto-advance)
+    const carousel = document.getElementById('carousel');
+    const dots = document.querySelectorAll('.carousel-dot');
+    let idx = 0;
+    function setSlide(i){
+      idx = i % dots.length;
+      const card = carousel.children[idx];
+      carousel.scrollTo({ left: card.offsetLeft - 16, behavior: 'smooth' });
+      dots.forEach((d,j)=> d.style.background = j===idx ? 'rgb(16 185 129)' : '' );
+    }
+    dots.forEach((d,i)=> d.addEventListener('click', ()=> setSlide(i)));
+    setInterval(()=> setSlide(idx+1), 4500);
+  </script>
+</body>
+</html>
